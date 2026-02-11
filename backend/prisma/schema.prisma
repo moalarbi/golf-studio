@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -12,7 +12,7 @@ model User {
   name          String
   email         String   @unique
   passwordHash  String   @map("password_hash")
-  role          UserRole @default(content_manager)
+  role          String @default("content_manager")
   createdAt     DateTime @default(now()) @map("created_at")
   posts         Post[]
 
@@ -24,11 +24,11 @@ model Lead {
   name          String
   phone         String
   email         String?
-  serviceType   ServiceType @map("service_type")
-  optionsJson   Json       @map("options_json")
+  serviceType   String @map("service_type")
+  optionsJson   String       @map("options_json")
   totalPrice    Int        @map("total_price")
   source        String?
-  status        LeadStatus @default(new)
+  status        String @default("new")
   notes         String?
   createdAt     DateTime   @default(now()) @map("created_at")
 
@@ -42,8 +42,8 @@ model Post {
   content         String
   seoTitle        String?    @map("seo_title")
   seoDescription  String?    @map("seo_description")
-  tags            String[]
-  status          PostStatus @default(draft)
+  tags            String?
+  status          String @default("draft")
   authorId        String?    @map("author_id")
   author          User?      @relation(fields: [authorId], references: [id])
   publishedAt     DateTime?  @map("published_at")
@@ -52,26 +52,6 @@ model Post {
   @@map("posts")
 }
 
-enum UserRole {
-  super_admin
-  content_manager
-  analyst
-}
 
-enum ServiceType {
-  store
-  marketing
-}
 
-enum LeadStatus {
-  new
-  contacted
-  qualified
-  won
-  lost
-}
 
-enum PostStatus {
-  draft
-  published
-}
