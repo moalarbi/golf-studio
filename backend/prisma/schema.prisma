@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  passwordHash  String   @map("password_hash")
+  role          UserRole @default(content_manager)
+  createdAt     DateTime @default(now()) @map("created_at")
+  posts         Post[]
+
+  @@map("users")
+}
+
+model Lead {
+  id            String     @id @default(uuid())
+  name          String
+  phone         String
+  email         String?
+  serviceType   ServiceType @map("service_type")
+  optionsJson   Json       @map("options_json")
+  totalPrice    Int        @map("total_price")
+  source        String?
+  status        LeadStatus @default(new)
+  notes         String?
+  createdAt     DateTime   @default(now()) @map("created_at")
+
+  @@map("leads")
+}
+
+model Post {
+  id              String     @id @default(uuid())
+  title           String
+  slug            String     @unique
+  content         String
+  seoTitle        String?    @map("seo_title")
+  seoDescription  String?    @map("seo_description")
+  tags            String[]
+  status          PostStatus @default(draft)
+  authorId        String?    @map("author_id")
+  author          User?      @relation(fields: [authorId], references: [id])
+  publishedAt     DateTime?  @map("published_at")
+  createdAt       DateTime   @default(now()) @map("created_at")
+
+  @@map("posts")
+}
+
+enum UserRole {
+  super_admin
+  content_manager
+  analyst
+}
+
+enum ServiceType {
+  store
+  marketing
+}
+
+enum LeadStatus {
+  new
+  contacted
+  qualified
+  won
+  lost
+}
+
+enum PostStatus {
+  draft
+  published
+}

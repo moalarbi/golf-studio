@@ -1,0 +1,116 @@
+/* GOLF STUDIO - App Styles */
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Base styles */
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #F5F6F7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Fix for mobile viewport height */
+@supports (height: 100dvh) {
+  .min-h-screen {
+    min-height: 100dvh;
+  }
+}
+
+/* Prevent text selection on interactive elements */
+.neu-button,
+.neu-button-primary,
+.neu-card {
+  user-select: none;
+}
+
+/* Focus styles for accessibility */
+.neu-input:focus,
+.neu-button:focus,
+.neu-button-primary:focus {
+  outline: 2px solid #10b981;
+  outline-offset: 2px;
+}
+
+/* Remove default button styles */
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* Link styles */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Image responsive */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Animation for page transitions */
+.page-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Loading skeleton animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .neu-card {
+    border-radius: 12px;
+  }
+  
+  .sticky-bottom {
+    padding: 12px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .sticky-bottom,
+  .neu-button,
+  .neu-button-primary {
+    display: none !important;
+  }
+  
+  .neu-card {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+}
