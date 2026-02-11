@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -25,11 +25,11 @@ model Lead {
   phone         String
   email         String?
   serviceType   String @map("service_type")
-  optionsJson   String       @map("options_json")
+  optionsJson   String       @map("options_json") @db.Text
   totalPrice    Int        @map("total_price")
   source        String?
   status        String @default("new")
-  notes         String?
+  notes         String? @db.Text
   createdAt     DateTime   @default(now()) @map("created_at")
 
   @@map("leads")
@@ -39,7 +39,7 @@ model Post {
   id              String     @id @default(uuid())
   title           String
   slug            String     @unique
-  content         String
+  content         String     @db.LongText
   seoTitle        String?    @map("seo_title")
   seoDescription  String?    @map("seo_description")
   tags            String?
@@ -51,7 +51,3 @@ model Post {
 
   @@map("posts")
 }
-
-
-
-
