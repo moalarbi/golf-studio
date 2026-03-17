@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Golf Studio — تجربة غولف لا مثيل لها. تدريب احترافي، ملاعب فاخرة، وبيئة مصممة لتحقيق الكمال." />
+  <meta name="keywords" content="golf studio, تدريب غولف, ملعب غولف, غولف السعودية" />
+  <title>Golf Studio | الكمال في كل ضربة</title>
+
+  <!-- Fonts -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── TOKENS ─────────────────────────────────────── */
+    :root {
+      --black:   #080a07;
+      --deep:    #0d1209;
+      --forest:  #1a2e18;
+      --moss:    #2d4a28;
+      --sage:    #4a7040;
+      --gold:    #c9a84c;
+      --gold-lt: #e8c96a;
+      --cream:   #f5f0e8;
+      --white:   #fafaf7;
+      --glass:   rgba(255,255,255,0.04);
+      --border:  rgba(201,168,76,0.18);
+
+      --ff-display: 'Cormorant Garamond', Georgia, serif;
+      --ff-body:    'Tajawal', sans-serif;
+
+      --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* ─── RESET ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      background: var(--black);
+      color: var(--cream);
+      font-family: var(--ff-body);
+      overflow-x: hidden;
+      cursor: none;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; width: 100%; }
+
+    /* ─── CUSTOM CURSOR ──────────────────────────────── */
+    .cursor {
+      position: fixed; top: 0; left: 0; z-index: 9999;
+      pointer-events: none; mix-blend-mode: difference;
+    }
+    .cursor__dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--gold);
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s;
+    }
+    .cursor__ring {
+      position: fixed; top: 0; left: 0;
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1px solid rgba(201,168,76,0.6);
+      transform: translate(-50%, -50%);
+      transition: transform 0.35s var(--ease-expo), width 0.3s, height 0.3s, opacity 0.3s;
+      pointer-events: none; z-index: 9998;
+    }
+    body:hover .cursor__ring { opacity: 1; }
+
+    /* ─── NOISE OVERLAY ──────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; opacity: 0.35;
+    }
+
+    /* ─── SCROLLBAR ───────────────────────────────────── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+    /* ─── NAV ─────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.5rem 5vw;
+      transition: background 0.5s, padding 0.5s;
+    }
+    nav.scrolled {
+      background: rgba(8,10,7,0.92);
+      backdrop-filter: blur(20px);
+      padding: 1rem 5vw;
+      border-bottom: 1px solid var(--border);
+    }
+    .nav__logo {
+      font-family: var(--ff-display);
+      font-size: 1.6rem; font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--white);
+    }
+    .nav__logo span { color: var(--gold); }
+    .nav__links {
+      display: flex; gap: 2.5rem; list-style: none;
+    }
+    .nav__links a {
+      font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(245,240,232,0.65);
+      transition: color 0.3s;
+      position: relative;
+    }
+    .nav__links a::after {
+      content: ''; position: absolute; bottom: -4px; right: 0;
+      width: 0; height: 1px; background: var(--gold);
+      transition: width 0.4s var(--ease-expo);
+    }
+    .nav__links a:hover { color: var(--cream); }
+    .nav__links a:hover::after { width: 100%; }
+    .nav__cta {
+      padding: 0.6rem 1.8rem;
+      border: 1px solid var(--gold);
+      font-size: 0.75rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--gold);
+      transition: all 0.35s var(--ease-expo);
+      background: transparent;
+      cursor: none;
+    }
+    .nav__cta:hover {
+      background: var(--gold); color: var(--black);
+      box-shadow: 0 0 30px rgba(201,168,76,0.3);
+    }
+    .nav__toggle { display: none; flex-direction: column; gap: 5px; cursor: none; }
+    .nav__toggle span { width: 26px; height: 1px; background: var(--cream); transition: all 0.3s; }
+
+    /* ─── HERO ────────────────────────────────────────── */
+    #hero {
+      position: relative; min-height: 100vh;
+      display: flex; align-items: center;
+      overflow: hidden;
+    }
+    .hero__bg {
+      position: absolute; inset: 0; z-index: 0;
+      /* ════════════════════════════════════════════
+         🖼️  IMAGE PLACEHOLDER — استبدل بصورة الهيرو
+         استخدم: background-image: url('images/hero.jpg');
+         أبعاد مقترحة: 1920×1080px أو أكبر
+         ════════════════════════════════════════════ */
+      background: linear-gradient(135deg, var(--forest) 0%, var(--black) 60%);
+      background-size: cover; background-position: center;
+    }
+    .hero__bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to left, rgba(8,10,7,0.2) 0%, rgba(8,10,7,0.75) 60%, var(--black) 100%);
+    }
+    /* Animated orbs */
+    .hero__orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(80px); animation: drift 12s ease-in-out infinite;
+    }
+    .hero__orb--1 { width: 500px; height: 500px; background: rgba(42,74,32,0.35); top: -10%; right: 5%; animation-delay: 0s; }
+    .hero__orb--2 { width: 300px; height: 300px; background: rgba(201,168,76,0.12); top: 40%; right: 25%; animation-delay: -4s; }
+    .hero__orb--3 { width: 400px; height: 400px; background: rgba(13,18,9,0.6); bottom: -15%; right: -5%; animation-delay: -8s; }
+    @keyframes drift {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33%       { transform: translate(-20px, 30px) scale(1.05); }
+      66%       { transform: translate(15px, -20px) scale(0.95); }
+    }
+    .hero__content {
+      position: relative; z-index: 2;
+      padding: 0 5vw; max-width: 720px;
+    }
+    .hero__eyebrow {
+      display: flex; align-items: center; gap: 1rem;
+      margin-bottom: 2rem;
+      opacity: 0; transform: translateY(20px);
+      animation: fadeUp 0.9s var(--ease-expo) 0.3s forwards;
+    }
+    .hero__eyebrow-line { width: 40px; height: 1px; background: var(--gold); }
+    .hero__eyebrow-text { font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
+    .hero__title {
+      font-family: var(--ff-display);
+      font-size: clamp(3.2rem, 7vw, 6.5rem);
+      font-weight: 300; line-height: 1.05;
+      color: var(--white);
+      margin-bottom: 0.3em;
+      opacity: 0; transform: translateY(30px);
+      animation: fadeUp 1s var(--ease-expo) 0.5s forwards;
+    }
+    .hero__title em { color: var(--gold); font-style: italic; font-weight: 400; }
+    .hero__subtitle {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      font-weight: 300; line-height: 1.7;
+      color: rgba(245,240,232,0.7);
+      max-width: 500px;
+      margin-bottom: 3rem;
+      opacity: 0; transform: translateY(30px);
+      animation: fadeUp 1s var(--ease-expo) 0.7s forwards;
+    }
+    .hero__actions {
+      display: flex; flex-wrap: wrap; gap: 1.2rem; align-items: center;
+      opacity: 0; transform: translateY(30px);
+      animation: fadeUp 1s var(--ease-expo) 0.9s forwards;
+    }
+    .btn--primary {
+      display: inline-flex; align-items: center; gap: 0.8rem;
+      padding: 1rem 2.5rem;
+      background: var(--gold);
+      color: var(--black);
+      font-size: 0.8rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+      transition: all 0.4s var(--ease-expo);
+      cursor: none; position: relative; overflow: hidden;
+    }
+    .btn--primary::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--gold-lt);
+      transform: translateX(100%);
+      transition: transform 0.4s var(--ease-expo);
+    }
+    .btn--primary:hover::before { transform: translateX(0); }
+    .btn--primary span, .btn--primary svg { position: relative; z-index: 1; }
+    .btn--primary:hover { box-shadow: 0 10px 40px rgba(201,168,76,0.4); }
+    .btn--ghost {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      padding: 0.9rem 0;
+      font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(245,240,232,0.65);
+      border-bottom: 1px solid rgba(245,240,232,0.2);
+      transition: all 0.35s;
+      cursor: none;
+    }
+    .btn--ghost:hover { color: var(--gold); border-color: var(--gold); }
+    .hero__scroll {
+      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+      z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      opacity: 0; animation: fadeIn 1s 1.4s forwards;
+    }
+    .hero__scroll-text { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(245,240,232,0.4); }
+    .hero__scroll-line {
+      width: 1px; height: 60px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50%       { opacity: 1; transform: scaleY(1.1); }
+    }
+
+    /* ─── STATS BAND ─────────────────────────────────── */
+    .stats {
+      position: relative; z-index: 2;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: rgba(13,18,9,0.7);
+      backdrop-filter: blur(12px);
+    }
+    .stats__inner {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      max-width: 1200px; margin: 0 auto;
+    }
+    .stat {
+      padding: 2.5rem 2rem; text-align: center;
+      border-left: 1px solid var(--border);
+      transition: background 0.3s;
+    }
+    .stat:first-child { border-left: none; }
+    .stat:hover { background: rgba(201,168,76,0.04); }
+    .stat__number {
+      font-family: var(--ff-display);
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 300; color: var(--gold);
+      line-height: 1;
+    }
+    .stat__label { font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(245,240,232,0.45); margin-top: 0.5rem; }
+
+    /* ─── SECTION COMMON ─────────────────────────────── */
+    section { position: relative; overflow: hidden; }
+    .section__inner { max-width: 1200px; margin: 0 auto; padding: 7rem 5vw; }
+    .section__tag {
+      display: inline-flex; align-items: center; gap: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .section__tag-line { width: 30px; height: 1px; background: var(--gold); }
+    .section__tag-text { font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
+    .section__headline {
+      font-family: var(--ff-display);
+      font-size: clamp(2rem, 4.5vw, 4rem);
+      font-weight: 300; line-height: 1.15;
+      color: var(--white);
+    }
+    .section__headline em { color: var(--gold); font-style: italic; }
+    .section__body {
+      font-size: 1rem; line-height: 1.85;
+      color: rgba(245,240,232,0.6);
+      max-width: 540px;
+    }
+
+    /* ─── EXPERIENCE (ABOUT) ─────────────────────────── */
+    #experience { background: var(--deep); }
+    .exp__grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+    }
+    .exp__media {
+      position: relative; aspect-ratio: 4/5;
+    }
+    .exp__image-wrap {
+      width: 100%; height: 100%; overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .exp__image-wrap img,
+    .exp__image-wrap .img-placeholder {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.8s var(--ease-expo);
+    }
+    .img-placeholder {
+      display: flex; align-items: center; justify-content: center;
+      background: var(--forest); color: rgba(245,240,232,0.15);
+      font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
+      font-family: var(--ff-body);
+      flex-direction: column; gap: 0.8rem;
+    }
+    .img-placeholder svg { opacity: 0.2; }
+    .exp__image-wrap:hover img,
+    .exp__image-wrap:hover .img-placeholder { transform: scale(1.04); }
+    .exp__badge {
+      position: absolute; bottom: -1.5rem; left: -1.5rem;
+      padding: 1.5rem 2rem;
+      background: var(--gold);
+      color: var(--black);
+      font-family: var(--ff-display); font-size: 0.9rem; font-weight: 600;
+      letter-spacing: 0.06em;
+    }
+    .exp__badge strong { display: block; font-size: 2rem; font-weight: 300; }
+    .exp__text { padding-right: 2rem; }
+    .exp__text .section__body { margin: 1.5rem 0 2.5rem; }
+    .exp__features { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+    .exp__features li {
+      display: flex; align-items: center; gap: 1rem;
+      font-size: 0.88rem; color: rgba(245,240,232,0.7);
+    }
+    .exp__features li::before {
+      content: ''; width: 5px; height: 5px; border-radius: 50%;
+      background: var(--gold); flex-shrink: 0;
+    }
+
+    /* ─── SERVICES ───────────────────────────────────── */
+    #services { background: var(--black); }
+    .svc__grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1.5px; margin-top: 4rem;
+    }
+    .svc__card {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      padding: 3rem 2.5rem;
+      position: relative; overflow: hidden;
+      transition: border-color 0.4s, transform 0.4s var(--ease-expo);
+      cursor: none;
+    }
+    .svc__card::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(201,168,76,0.06) 0%, transparent 60%);
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .svc__card:hover { border-color: rgba(201,168,76,0.45); transform: translateY(-6px); }
+    .svc__card:hover::before { opacity: 1; }
+    .svc__number {
+      font-family: var(--ff-display);
+      font-size: 4.5rem; font-weight: 300;
+      color: rgba(201,168,76,0.12);
+      line-height: 1; margin-bottom: 1.5rem;
+      transition: color 0.4s;
+    }
+    .svc__card:hover .svc__number { color: rgba(201,168,76,0.25); }
+    .svc__image {
+      width: 100%; aspect-ratio: 16/9;
+      overflow: hidden; margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+    }
+    .svc__image .img-placeholder { height: 100%; min-height: 120px; }
+    .svc__title {
+      font-family: var(--ff-display);
+      font-size: 1.5rem; font-weight: 400;
+      color: var(--white); margin-bottom: 0.8rem;
+    }
+    .svc__desc { font-size: 0.88rem; line-height: 1.8; color: rgba(245,240,232,0.5); margin-bottom: 2rem; }
+    .svc__link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--gold); transition: gap 0.3s;
+    }
+    .svc__link:hover { gap: 1rem; }
+
+    /* ─── GALLERY ────────────────────────────────────── */
+    #gallery { background: var(--deep); }
+    .gallery__header {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 3rem;
+    }
+    .gallery__grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: auto auto;
+      gap: 1rem;
+    }
+    .gallery__item {
+      overflow: hidden; cursor: none;
+      border: 1px solid var(--border);
+      transition: border-color 0.4s;
+      position: relative;
+    }
+    .gallery__item:hover { border-color: rgba(201,168,76,0.45); }
+    .gallery__item:nth-child(1) { grid-column: span 7; grid-row: span 2; aspect-ratio: 4/3; }
+    .gallery__item:nth-child(2) { grid-column: span 5; aspect-ratio: 16/9; }
+    .gallery__item:nth-child(3) { grid-column: span 5; aspect-ratio: 16/9; }
+    .gallery__item .img-placeholder { min-height: 200px; height: 100%; }
+    .gallery__item:nth-child(1) .img-placeholder { min-height: 400px; }
+    .gallery__item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s var(--ease-expo); }
+    .gallery__item:hover img { transform: scale(1.06); }
+
+    /* ─── TESTIMONIAL ────────────────────────────────── */
+    #testimonial {
+      background: var(--forest);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .testi__inner {
+      max-width: 900px; margin: 0 auto;
+      padding: 7rem 5vw; text-align: center;
+    }
+    .testi__quote-mark {
+      font-family: var(--ff-display); font-size: 8rem; line-height: 0.5;
+      color: rgba(201,168,76,0.2); margin-bottom: 2rem;
+      display: block;
+    }
+    .testi__text {
+      font-family: var(--ff-display);
+      font-size: clamp(1.4rem, 3vw, 2.4rem);
+      font-weight: 300; line-height: 1.5;
+      color: var(--cream); margin-bottom: 2.5rem;
+    }
+    .testi__author {
+      display: flex; align-items: center; justify-content: center; gap: 1.2rem;
+    }
+    .testi__avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      overflow: hidden; border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .testi__avatar .img-placeholder { height: 52px; font-size: 0.5rem; }
+    .testi__name { font-weight: 500; font-size: 0.9rem; }
+    .testi__role { font-size: 0.72rem; color: var(--gold); letter-spacing: 0.1em; }
+
+    /* ─── PRICING ────────────────────────────────────── */
+    #pricing { background: var(--black); }
+    .pricing__grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem; margin-top: 4rem;
+    }
+    .pricing__card {
+      border: 1px solid var(--border);
+      padding: 3rem 2.5rem;
+      transition: all 0.4s var(--ease-expo);
+      position: relative; cursor: none;
+    }
+    .pricing__card--featured {
+      border-color: var(--gold);
+      background: linear-gradient(135deg, rgba(201,168,76,0.07) 0%, transparent 70%);
+    }
+    .pricing__card--featured .pricing__badge {
+      position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
+      background: var(--gold); color: var(--black);
+      font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700;
+      padding: 0.3rem 1.2rem;
+    }
+    .pricing__card:hover { transform: translateY(-5px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+    .pricing__tier { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem; }
+    .pricing__price {
+      font-family: var(--ff-display);
+      font-size: clamp(2.5rem, 4vw, 3.8rem);
+      font-weight: 300; color: var(--white); line-height: 1;
+    }
+    .pricing__price sup { font-size: 1.2rem; vertical-align: super; font-weight: 400; color: var(--gold); }
+    .pricing__period { font-size: 0.75rem; color: rgba(245,240,232,0.4); margin-top: 0.3rem; margin-bottom: 2rem; }
+    .pricing__divider { height: 1px; background: var(--border); margin: 2rem 0; }
+    .pricing__features { list-style: none; display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: 2.5rem; }
+    .pricing__features li { display: flex; align-items: center; gap: 0.8rem; font-size: 0.85rem; color: rgba(245,240,232,0.65); }
+    .pricing__check { width: 16px; height: 16px; border-radius: 50%; background: rgba(201,168,76,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .pricing__check svg { width: 8px; height: 8px; }
+    .btn--pricing {
+      display: block; text-align: center;
+      padding: 0.9rem; border: 1px solid var(--border);
+      font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--cream); transition: all 0.35s;
+      cursor: none;
+    }
+    .btn--pricing:hover, .pricing__card--featured .btn--pricing {
+      background: var(--gold); border-color: var(--gold); color: var(--black);
+    }
+
+    /* ─── CONTACT / CTA ──────────────────────────────── */
+    #contact {
+      background: var(--deep);
+      border-top: 1px solid var(--border);
+    }
+    .contact__grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start;
+    }
+    .contact__text .section__body { margin: 1.5rem 0 3rem; }
+    .contact__info { display: flex; flex-direction: column; gap: 1.5rem; }
+    .contact__item { display: flex; gap: 1rem; align-items: flex-start; }
+    .contact__icon {
+      width: 40px; height: 40px; border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      color: var(--gold);
+    }
+    .contact__detail h4 { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.3rem; }
+    .contact__detail p { font-size: 0.9rem; color: rgba(245,240,232,0.6); }
+    .contact__form { display: flex; flex-direction: column; gap: 1.2rem; }
+    .form__group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .form__group label { font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(245,240,232,0.5); }
+    .form__group input,
+    .form__group textarea,
+    .form__group select {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      color: var(--cream);
+      padding: 0.85rem 1rem;
+      font-family: var(--ff-body); font-size: 0.9rem;
+      transition: border-color 0.3s;
+      cursor: none;
+    }
+    .form__group input:focus,
+    .form__group textarea:focus,
+    .form__group select:focus { outline: none; border-color: var(--gold); }
+    .form__group textarea { resize: vertical; min-height: 120px; }
+    .form__group select option { background: var(--deep); }
+    .form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form__submit {
+      width: 100%; padding: 1rem;
+      background: var(--gold); border: none; color: var(--black);
+      font-family: var(--ff-body); font-size: 0.8rem; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      cursor: none; transition: all 0.35s var(--ease-expo);
+    }
+    .form__submit:hover { background: var(--gold-lt); box-shadow: 0 8px 30px rgba(201,168,76,0.35); }
+
+    /* ─── FOOTER ─────────────────────────────────────── */
+    footer {
+      background: var(--black);
+      border-top: 1px solid var(--border);
+      padding: 4rem 5vw 2.5rem;
+    }
+    .footer__grid {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .footer__brand .nav__logo { font-size: 1.8rem; margin-bottom: 1rem; }
+    .footer__brand p { font-size: 0.85rem; line-height: 1.8; color: rgba(245,240,232,0.4); max-width: 280px; }
+    .footer__col h4 { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; }
+    .footer__col ul { list-style: none; display: flex; flex-direction: column; gap: 0.8rem; }
+    .footer__col ul a { font-size: 0.85rem; color: rgba(245,240,232,0.4); transition: color 0.3s; }
+    .footer__col ul a:hover { color: var(--cream); }
+    .footer__bottom {
+      max-width: 1200px; margin: 2rem auto 0;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.72rem; color: rgba(245,240,232,0.25);
+    }
+
+    /* ─── SCROLL REVEAL ──────────────────────────────── */
+    .reveal {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity 0.9s var(--ease-expo), transform 0.9s var(--ease-expo);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.45s; }
+
+    /* ─── ANIMATIONS ─────────────────────────────────── */
+    @keyframes fadeUp  { to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn  { to { opacity: 1; } }
+
+    /* ─── RESPONSIVE ─────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .stats__inner { grid-template-columns: repeat(2, 1fr); }
+      .stat:nth-child(1), .stat:nth-child(3) { border-left: none; }
+      .svc__grid { grid-template-columns: 1fr 1fr; }
+      .pricing__grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .nav__links, .nav__cta { display: none; }
+      .nav__toggle { display: flex; }
+      .exp__grid, .contact__grid { grid-template-columns: 1fr; }
+      .exp__badge { left: 0; bottom: -1rem; }
+      .svc__grid, .pricing__grid { grid-template-columns: 1fr; }
+      .gallery__item:nth-child(1) { grid-column: span 12; }
+      .gallery__item:nth-child(2), .gallery__item:nth-child(3) { grid-column: span 12; }
+      .footer__grid { grid-template-columns: 1fr 1fr; }
+      .form__row { grid-template-columns: 1fr; }
+      .stats__inner { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .stats__inner { grid-template-columns: 1fr; }
+      .stat { border-left: none; border-top: 1px solid var(--border); }
+      .footer__grid { grid-template-columns: 1fr; }
+    }
+  </style>
+
+</head>
+<body>
+
+  <!-- Custom Cursor -->
+
+  <div class="cursor" id="cursor"><div class="cursor__dot" id="cursorDot"></div></div>
+  <div class="cursor__ring" id="cursorRing"></div>
+
+  <!-- ── NAV ── -->
+
+  <nav id="navbar">
+    <div class="nav__logo">Golf<span>.</span>Studio</div>
+    <ul class="nav__links">
+      <li><a href="#experience">من نحن</a></li>
+      <li><a href="#services">خدماتنا</a></li>
+      <li><a href="#gallery">المعرض</a></li>
+      <li><a href="#pricing">الأسعار</a></li>
+    </ul>
+    <a href="#contact" class="nav__cta">احجز جلستك</a>
+    <button class="nav__toggle" aria-label="القائمة" id="menuToggle">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ── HERO ── -->
+
+  <section id="hero">
+    <div class="hero__bg" id="heroBg">
+      <!--
+        🖼️ IMAGE PLACEHOLDER
+        لإضافة صورة الخلفية:
+        1. ضع الصورة في مجلد images/
+        2. أضف السطر التالي في CSS داخل .hero__bg:
+           background-image: url('images/hero-bg.jpg');
+        أبعاد مقترحة: 1920×1080 أو أكبر
+      -->
+      <div class="hero__orb hero__orb--1"></div>
+      <div class="hero__orb hero__orb--2"></div>
+      <div class="hero__orb hero__orb--3"></div>
+    </div>
+
+```
+<div class="hero__content">
+  <div class="hero__eyebrow">
+    <div class="hero__eyebrow-line"></div>
+    <span class="hero__eyebrow-text">Golf Studio — الريادة منذ ٢٠١٠</span>
+  </div>
+
+  <h1 class="hero__title">
+    الكمال<br>
+    في <em>كل ضربة</em>
+  </h1>
+
+  <p class="hero__subtitle">
+    حيث تلتقي دقة التدريب الاحترافي بفخامة البيئة المصممة للعظماء.
+    ارفع مستواك في ملاعب حصرية مع مدربين معتمدين دوليًا.
+  </p>
+
+  <div class="hero__actions">
+    <a href="#contact" class="btn--primary">
+      <span>احجز تجربتك الأولى</span>
+      <svg width="16" height="10" viewBox="0 0 16 10" fill="none"><path d="M1 5h14M10 1l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <a href="#gallery" class="btn--ghost">
+      استكشف الملاعب
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1l6 6-6 6M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </a>
+  </div>
+</div>
+
+<div class="hero__scroll">
+  <span class="hero__scroll-text">تمرر للأسفل</span>
+  <div class="hero__scroll-line"></div>
+</div>
+```
+
+  </section>
+
+  <!-- ── STATS ── -->
+
+  <div class="stats">
+    <div class="stats__inner">
+      <div class="stat reveal">
+        <div class="stat__number" data-target="500">0</div>
+        <div class="stat__label">عضو نشط</div>
+      </div>
+      <div class="stat reveal reveal-delay-1">
+        <div class="stat__number" data-target="12">0</div>
+        <div class="stat__label">ملعب حصري</div>
+      </div>
+      <div class="stat reveal reveal-delay-2">
+        <div class="stat__number" data-target="15">0</div>
+        <div class="stat__label">مدرب معتمد</div>
+      </div>
+      <div class="stat reveal reveal-delay-3">
+        <div class="stat__number" data-suffix="+">١٤</div>
+        <div class="stat__label">سنة من التميز</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── EXPERIENCE ── -->
+
+  <section id="experience">
+    <div class="section__inner">
+      <div class="exp__grid">
+        <div class="exp__media reveal">
+          <div class="exp__image-wrap">
+            <!--
+              🖼️ IMAGE PLACEHOLDER
+              استبدل المحتوى التالي بـ:
+              <img src="images/experience.jpg" alt="تجربة Golf Studio" />
+              أبعاد مقترحة: 600×750px
+            -->
+            <div class="img-placeholder">
+              <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="1" y="1" width="38" height="38" stroke="currentColor" stroke-width="1"/><path d="M8 32l8-12 6 8 5-7 7 11" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><circle cx="14" cy="14" r="4" stroke="currentColor" stroke-width="1"/></svg>
+              صورة التجربة<br/>600 × 750 px
+            </div>
+          </div>
+          <div class="exp__badge">
+            <strong>١٤</strong>
+            عامًا من الإتقان
+          </div>
+        </div>
+
+```
+    <div class="exp__text">
+      <div class="section__tag reveal">
+        <div class="section__tag-line"></div>
+        <span class="section__tag-text">قصتنا</span>
+      </div>
+      <h2 class="section__headline reveal reveal-delay-1">
+        تجربة <em>فوق المعتاد</em>
+        في كل زاوية
+      </h2>
+      <p class="section__body reveal reveal-delay-2">
+        Golf Studio ليست مجرد ملعب — إنها بيئة متكاملة مصممة بدقة هندسية لتحرير أفضل ما فيك. من أول خطوة تدخلها، تشعر بأن هذا المكان صُنع لأشخاص يأخذون شغفهم بجدية.
+      </p>
+      <ul class="exp__features reveal reveal-delay-3">
+        <li>ملاعب مصممة وفق المعايير الدولية لـ PGA</li>
+        <li>تحليل الحركة بتقنية الذكاء الاصطناعي (AI Swing Analysis)</li>
+        <li>برامج تدريب مخصصة لكل مستوى — مبتدئ حتى محترف</li>
+        <li>منطقة VIP للتدريب الخاص والمجموعات الصغيرة</li>
+        <li>أحدث معدات Golf من كبرى العلامات العالمية</li>
+      </ul>
+    </div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- ── SERVICES ── -->
+
+  <section id="services">
+    <div class="section__inner">
+      <div class="section__tag reveal">
+        <div class="section__tag-line"></div>
+        <span class="section__tag-text">خدماتنا</span>
+      </div>
+      <h2 class="section__headline reveal reveal-delay-1">
+        كل ما تحتاجه<br>
+        <em>تحت سقف واحد</em>
+      </h2>
+
+```
+  <div class="svc__grid">
+    <!-- Card 1 -->
+    <div class="svc__card reveal reveal-delay-1">
+      <div class="svc__number">01</div>
+      <div class="svc__image">
+        <!--
+          🖼️ IMAGE PLACEHOLDER
+          <img src="images/service-training.jpg" alt="تدريب فردي" />
+          أبعاد مقترحة: 400×225px
+        -->
+        <div class="img-placeholder">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="13" stroke="currentColor" stroke-width="1"/><path d="M9 14l3.5 3.5L19 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          400 × 225 px
+        </div>
+      </div>
+      <h3 class="svc__title">تدريب فردي مكثف</h3>
+      <p class="svc__desc">جلسات خاصة مع مدرب متخصص يحلل أسلوبك ويصمم خطة تطوير دقيقة تناسب جسدك وأهدافك.</p>
+      <a href="#contact" class="svc__link">
+        اكتشف أكثر
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M8 1l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </a>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="svc__card reveal reveal-delay-2">
+      <div class="svc__number">02</div>
+      <div class="svc__image">
+        <!--
+          🖼️ IMAGE PLACEHOLDER
+          <img src="images/service-groups.jpg" alt="تدريب مجموعات" />
+          أبعاد مقترحة: 400×225px
+        -->
+        <div class="img-placeholder">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1"/><circle cx="20" cy="10" r="4" stroke="currentColor" stroke-width="1"/><path d="M4 24c0-4 2.7-7 6-7h8c3.3 0 6 3 6 7" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+          400 × 225 px
+        </div>
+      </div>
+      <h3 class="svc__title">تدريب المجموعات</h3>
+      <p class="svc__desc">برامج تفاعلية للمجموعات الصغيرة. اجمع أصحابك وتدربوا في أجواء تنافسية ممتعة تسرّع التطور.</p>
+      <a href="#contact" class="svc__link">
+        اكتشف أكثر
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M8 1l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </a>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="svc__card reveal reveal-delay-3">
+      <div class="svc__number">03</div>
+      <div class="svc__image">
+        <!--
+          🖼️ IMAGE PLACEHOLDER
+          <img src="images/service-corporate.jpg" alt="فعاليات الشركات" />
+          أبعاد مقترحة: 400×225px
+        -->
+        <div class="img-placeholder">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="8" width="20" height="16" stroke="currentColor" stroke-width="1" rx="1"/><path d="M10 8V6a4 4 0 018 0v2" stroke="currentColor" stroke-width="1"/><path d="M14 16v-4M12 14h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          400 × 225 px
+        </div>
+      </div>
+      <h3 class="svc__title">الفعاليات الاحترافية</h3>
+      <p class="svc__desc">خدمات متكاملة لتنظيم البطولات وفعاليات الشركات والمناسبات الخاصة في بيئة حصرية لا تُنسى.</p>
+      <a href="#contact" class="svc__link">
+        اكتشف أكثر
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M8 1l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- ── GALLERY ── -->
+
+  <section id="gallery">
+    <div class="section__inner">
+      <div class="gallery__header">
+        <div>
+          <div class="section__tag reveal">
+            <div class="section__tag-line"></div>
+            <span class="section__tag-text">المعرض</span>
+          </div>
+          <h2 class="section__headline reveal reveal-delay-1">
+            شاهد<br><em>عالمنا</em>
+          </h2>
+        </div>
+        <a href="#contact" class="btn--ghost reveal">
+          احجز زيارة
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1l6 6-6 6M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </a>
+      </div>
+
+```
+  <div class="gallery__grid">
+    <!-- Gallery Item 1 — Large -->
+    <div class="gallery__item reveal">
+      <!--
+        🖼️ IMAGE PLACEHOLDER — الصورة الرئيسية الكبيرة
+        <img src="images/gallery-main.jpg" alt="ملاعب Golf Studio" />
+        أبعاد مقترحة: 800×600px
+      -->
+      <div class="img-placeholder" style="min-height:400px">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="1" y="1" width="38" height="38" stroke="currentColor" stroke-width="1"/><path d="M8 32l8-12 6 8 5-7 7 11" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        الصورة الرئيسية<br/>800 × 600 px
+      </div>
+    </div>
+
+    <!-- Gallery Item 2 -->
+    <div class="gallery__item reveal reveal-delay-1">
+      <!--
+        🖼️ IMAGE PLACEHOLDER
+        <img src="images/gallery-2.jpg" alt="التدريب الاحترافي" />
+        أبعاد مقترحة: 600×340px
+      -->
+      <div class="img-placeholder">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="1" y="1" width="30" height="30" stroke="currentColor" stroke-width="1"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1"/></svg>
+        600 × 340 px
+      </div>
+    </div>
+
+    <!-- Gallery Item 3 -->
+    <div class="gallery__item reveal reveal-delay-2">
+      <!--
+        🖼️ IMAGE PLACEHOLDER
+        <img src="images/gallery-3.jpg" alt="الأجواء الفاخرة" />
+        أبعاد مقترحة: 600×340px
+      -->
+      <div class="img-placeholder">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="1" y="1" width="30" height="30" stroke="currentColor" stroke-width="1"/><path d="M6 26l7-10 5 7 4-6 6 9" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+        600 × 340 px
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- ── TESTIMONIAL ── -->
+
+  <section id="testimonial">
+    <div class="testi__inner">
+      <span class="testi__quote-mark reveal">"</span>
+      <p class="testi__text reveal reveal-delay-1">
+        Golf Studio غيّرت نظرتي تمامًا للرياضة. المكان يُشعرك بأنك محترف حقيقي من أول لحظة — البيئة، المدربون، التجربة الكاملة تفوق كل توقع.
+      </p>
+      <div class="testi__author reveal reveal-delay-2">
+        <div class="testi__avatar">
+          <!--
+            🖼️ IMAGE PLACEHOLDER
+            <img src="images/testimonial-avatar.jpg" alt="فهد العتيبي" />
+            أبعاد مقترحة: 52×52px، دائري
+          -->
+          <div class="img-placeholder" style="font-size:0.5rem">52px</div>
+        </div>
+        <div>
+          <div class="testi__name">فهد العتيبي</div>
+          <div class="testi__role">عضو VIP — الرياض</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PRICING ── -->
+
+  <section id="pricing">
+    <div class="section__inner">
+      <div style="text-align:center; margin-bottom:1rem;">
+        <div class="section__tag reveal" style="justify-content:center">
+          <div class="section__tag-line"></div>
+          <span class="section__tag-text">الباقات</span>
+          <div class="section__tag-line"></div>
+        </div>
+        <h2 class="section__headline reveal reveal-delay-1" style="text-align:center">
+          استثمر في <em>نفسك</em>
+        </h2>
+        <p class="section__body reveal reveal-delay-2" style="margin:1rem auto 0; text-align:center">
+          باقات مرنة صُممت لتناسب مختلف الأهداف والجداول الزمنية
+        </p>
+      </div>
+
+```
+  <div class="pricing__grid">
+    <!-- Starter -->
+    <div class="pricing__card reveal reveal-delay-1">
+      <div class="pricing__tier">المبتدئ</div>
+      <div class="pricing__price"><sup>﷼</sup>299</div>
+      <div class="pricing__period">شهريًا</div>
+      <div class="pricing__divider"></div>
+      <ul class="pricing__features">
+        <li><div class="pricing__check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/></svg></div>دخول الملعب — ٤ جلسات/شهر</li>
+        <li><div class="pricing__check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/></svg></div>جلسة تعريفية مع مدرب</li>
+        <li><div class="pricing__check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/></svg></div>الوصول للمعدات الأساسية</li>
+      </ul>
+      <a href="#contact" class="btn--pricing">ابدأ الآن</a>
+    </div>
+
+    <!-- Pro (Featured) -->
+    <div class="pricing__card pricing__card--featured reveal reveal-delay-2">
+      <div class="pricing__badge">الأكثر شعبية</div>
+      <div class="pricing__tier">المحترف</div>
+      <div class="pricing__price"><sup>﷼</sup>799</div>
+      <div class="pricing__period">شهريًا</div>
+      <div class="pricing__divider"></div>
+      <ul class="pricing__features">
+        <li><div class="pricing__check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/></svg></div>دخول غير محدود للملاعب</li>
+        <li><div class="pricing__check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/></svg></div>٤ جلسات خاصة مع مدرب</li>
+        <li><div class="pricing__check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/></svg></div>تحليل الضربة بالذكاء الاصطناعي</li>
+        <li><div class="pricing__check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/></svg></div>خطة تطوير شهرية مخصصة</li>
+      </ul>
+      <a href="#contact" class="btn--pricing">اختر هذه الباقة</a>
+    </div>
+
+    <!-- Elite -->
+    <div class="pricing__card reveal reveal-delay-3">
+      <div class="pricing__tier">النخبة</div>
+      <div class="pricing__price"><sup>﷼</sup>1,499</div>
+      <div class="pricing__period">شهريًا</div>
+      <div class="pricing__divider"></div>
+      <ul class="pricing__features">
+        <li><div class="pricing__check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/></svg></div>كل مزايا باقة المحترف</li>
+        <li><div class="pricing__check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/></svg></div>منطقة VIP حصرية</li>
+        <li><div class="pricing__check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/></svg></div>أولوية في الحجز والبطولات</li>
+        <li><div class="pricing__check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/></svg></div>استشارة التغذية الرياضية</li>
+        <li><div class="pricing__check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/></svg></div>خصم ٢٠٪ على المعدات</li>
+      </ul>
+      <a href="#contact" class="btn--pricing">للنخبة فقط</a>
+    </div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- ── CONTACT ── -->
+
+  <section id="contact">
+    <div class="section__inner">
+      <div class="contact__grid">
+        <div class="contact__text">
+          <div class="section__tag reveal">
+            <div class="section__tag-line"></div>
+            <span class="section__tag-text">تواصل معنا</span>
+          </div>
+          <h2 class="section__headline reveal reveal-delay-1">
+            ابدأ رحلتك<br>
+            <em>اليوم</em>
+          </h2>
+          <p class="section__body reveal reveal-delay-2">
+            فريقنا جاهز لمساعدتك في اختيار الباقة المناسبة وتحديد موعد جلستك الأولى. لا تؤجل التميز.
+          </p>
+
+```
+      <div class="contact__info reveal reveal-delay-3">
+        <div class="contact__item">
+          <div class="contact__icon">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 1a6 6 0 016 6c0 4-6 10-6 10S3 11 3 7a6 6 0 016-6z" stroke="currentColor" stroke-width="1.2"/><circle cx="9" cy="7" r="2" stroke="currentColor" stroke-width="1.2"/></svg>
+          </div>
+          <div class="contact__detail">
+            <h4>الموقع</h4>
+            <!-- استبدل بعنوانك الفعلي -->
+            <p>حي النزهة، الرياض، المملكة العربية السعودية</p>
+          </div>
+        </div>
+        <div class="contact__item">
+          <div class="contact__icon">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 4h14v10a1 1 0 01-1 1H3a1 1 0 01-1-1V4z" stroke="currentColor" stroke-width="1.2"/><path d="M2 4l7 6 7-6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="contact__detail">
+            <h4>البريد الإلكتروني</h4>
+            <!-- استبدل بإيميلك الفعلي -->
+            <p>info@golfstudio.sa</p>
+          </div>
+        </div>
+        <div class="contact__item">
+          <div class="contact__icon">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 2h4l2 5-2.5 1.5a11 11 0 005 5L13 11l5 2v4a2 2 0 01-2 2C7.2 19 1 12.8 1 5a2 2 0 012-3z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="contact__detail">
+            <h4>الهاتف</h4>
+            <!-- استبدل برقم هاتفك الفعلي -->
+            <p>٩٦٦-١١-٢٣٤-٥٦٧٨+</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Form -->
+    <div class="contact__form reveal reveal-delay-2">
+      <div class="form__row">
+        <div class="form__group">
+          <label for="fname">الاسم الأول</label>
+          <input type="text" id="fname" placeholder="محمد" />
+        </div>
+        <div class="form__group">
+          <label for="lname">اسم العائلة</label>
+          <input type="text" id="lname" placeholder="العمري" />
+        </div>
+      </div>
+      <div class="form__group">
+        <label for="email">البريد الإلكتروني</label>
+        <input type="email" id="email" placeholder="email@example.com" />
+      </div>
+      <div class="form__group">
+        <label for="phone">رقم الجوال</label>
+        <input type="tel" id="phone" placeholder="+966 5X XXX XXXX" />
+      </div>
+      <div class="form__group">
+        <label for="package">الباقة المهتم بها</label>
+        <select id="package">
+          <option value="">اختر الباقة</option>
+          <option value="starter">المبتدئ — ٢٩٩ ر.س</option>
+          <option value="pro">المحترف — ٧٩٩ ر.س</option>
+          <option value="elite">النخبة — ١,٤٩٩ ر.س</option>
+          <option value="event">فعالية / شركة</option>
+        </select>
+      </div>
+      <div class="form__group">
+        <label for="message">رسالتك</label>
+        <textarea id="message" placeholder="أخبرنا أكثر عن هدفك..."></textarea>
+      </div>
+      <button class="form__submit" id="formSubmit">إرسال الطلب</button>
+    </div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- ── FOOTER ── -->
+
+  <footer>
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <div class="nav__logo">Golf<span>.</span>Studio</div>
+        <p>الكمال في كل ضربة. تجربة تدريب غولف احترافية في بيئة فاخرة مصممة للعظماء.</p>
+      </div>
+      <div class="footer__col">
+        <h4>الاستكشاف</h4>
+        <ul>
+          <li><a href="#experience">من نحن</a></li>
+          <li><a href="#services">خدماتنا</a></li>
+          <li><a href="#gallery">المعرض</a></li>
+          <li><a href="#pricing">الأسعار</a></li>
+          <li><a href="#contact">تواصل معنا</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>الخدمات</h4>
+        <ul>
+          <li><a href="#services">تدريب فردي</a></li>
+          <li><a href="#services">تدريب مجموعات</a></li>
+          <li><a href="#services">فعاليات الشركات</a></li>
+          <li><a href="#services">البطولات</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>تابعنا</h4>
+        <ul>
+          <!-- استبدل الروابط بحساباتك الفعلية -->
+          <li><a href="#">إنستقرام</a></li>
+          <li><a href="#">تويتر / X</a></li>
+          <li><a href="#">يوتيوب</a></li>
+          <li><a href="#">لينكد إن</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© ٢٠٢٥ Golf Studio. جميع الحقوق محفوظة.</span>
+      <span>صُنع بشغف في المملكة العربية السعودية 🇸🇦</span>
+    </div>
+  </footer>
+
+  <!-- ─────────── SCRIPTS ─────────── -->
+
+  <script>
+    // ── CURSOR ──
+    const dot = document.getElementById('cursorDot');
+    const ring = document.getElementById('cursorRing');
+    let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX; mouseY = e.clientY;
+      dot.style.left = mouseX + 'px';
+      dot.style.top  = mouseY + 'px';
+    });
+
+    function animateRing() {
+      ringX += (mouseX - ringX) * 0.12;
+      ringY += (mouseY - ringY) * 0.12;
+      ring.style.left = ringX + 'px';
+      ring.style.top  = ringY + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    document.querySelectorAll('a, button, .svc__card, .pricing__card').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        ring.style.width = '56px'; ring.style.height = '56px';
+        ring.style.borderColor = 'rgba(201,168,76,0.9)';
+      });
+      el.addEventListener('mouseleave', () => {
+        ring.style.width = '36px'; ring.style.height = '36px';
+        ring.style.borderColor = 'rgba(201,168,76,0.6)';
+      });
+    });
+
+    // ── NAV SCROLL ──
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // ── PARALLAX HERO ──
+    const heroBg = document.getElementById('heroBg');
+    window.addEventListener('scroll', () => {
+      heroBg.style.transform = `translateY(${window.scrollY * 0.4}px)`;
+    });
+
+    // ── SCROLL REVEAL ──
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => observer.observe(el));
+
+    // ── COUNTER ANIMATION ──
+    function animateCounter(el) {
+      const target = parseInt(el.dataset.target);
+      const duration = 1800;
+      const start = performance.now();
+      function update(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.floor(eased * target) + (el.dataset.suffix || '+');
+        if (progress < 1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    }
+
+    const counterObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && entry.target.dataset.target) {
+          animateCounter(entry.target);
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.stat__number[data-target]').forEach(el => counterObserver.observe(el));
+
+    // ── FORM SUBMIT ──
+    document.getElementById('formSubmit').addEventListener('click', () => {
+      const btn = document.getElementById('formSubmit');
+      btn.textContent = '✓ تم إرسال طلبك بنجاح!';
+      btn.style.background = '#2d4a28';
+      setTimeout(() => {
+        btn.textContent = 'إرسال الطلب';
+        btn.style.background = '';
+      }, 3500);
+    });
+
+    // ── MOBILE MENU ──
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks   = document.querySelector('.nav__links');
+    menuToggle.addEventListener('click', () => {
+      const open = navLinks.style.display === 'flex';
+      navLinks.style.cssText = open
+        ? ''
+        : 'display:flex;flex-direction:column;position:fixed;top:70px;right:0;left:0;background:rgba(8,10,7,0.97);padding:2rem 5vw;gap:1.5rem;border-bottom:1px solid rgba(201,168,76,0.18);z-index:99';
+    });
+  </script>
+
+</body>
+</html>
